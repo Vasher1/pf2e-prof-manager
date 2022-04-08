@@ -20,24 +20,33 @@ Hooks.on("renderActorSheet", (sheet, $html) => {
             ui.notifications.info("PF2E Skill Proficiency Manager | Please Choose Ancestry, Background, Heritage, and Class");
         }
     });
-    $html.find("h3:contains('Core Skills')").append($button);
+    $('.item-name.core-title').append($button);
 });
 
 
-let SkillUpLevels, SkillNames, Level, Class, Skills, Flags, SaveData, SelectedActor
+let SkillUpLevels, SkillNames, Level, Class, Skills, Flags, SelectedActor
 
 function pageload(){    
-    // Used
     SelectedActor = globalThis.PROF;
-    Skills = SelectedActor.data.data.skills;
+    Skills =  JSON.parse(JSON.stringify(SelectedActor.data.data.skills));
     Class = SelectedActor.class.data.data;
     Level = SelectedActor.data.data.details.level.value;
     SkillNames = Object.getOwnPropertyNames(Skills);
     Flags = SelectedActor.data.flags["pf2e-prof-manager"]?.prof;
+    LevelTranslation = game.i18n.localize("PF2E.CharacterLevelLabel");
+    $('#LevelTitle').html(LevelTranslation);
+
+    SkillNames = SkillNames.sort(function(a, b){
+        if(a.name < b.name) { return -1; }
+        if(a.name > b.name) { return 1; }
+        return 0;
+    }).reverse();
 
     // Build UI
     SkillNames.forEach(skillName => {
-        $(`<tr><td>${Skills[skillName].name}</td><td class="Scenter" id="S${skillName}"></td></tr>`).insertAfter($("#header"))
+        var skillNameTranslated = game.i18n.localize(`PF2E.Skill${capitalizeFirstLetter(Skills[skillName].name)}`);
+
+        $(`<tr><td>${skillNameTranslated}</td><td class="Scenter" id="S${skillName}"></td></tr>`).insertAfter($("#header"));
     })
 
     SkillUpLevels = [1];
@@ -47,10 +56,8 @@ function pageload(){
         }
     });
 
-    game.i18n.localize("Level");
-
     SkillUpLevels.forEach(level => {
-        $(`<th class="Scenter S${level}">Level ${level}</th>`).insertBefore($("#LevelTitle"));
+        $(`<th class="Scenter S${level}">${LevelTranslation} ${level}</th>`).insertBefore($("#LevelTitle"));
         SkillNames.forEach(skill => {
             $(`<td class="Scenter S${level}"><input type="checkbox" id="S${level}${skill}" data-name="${skill}" /></td>`).insertBefore($(`#S${skill}`))
         })
@@ -74,9 +81,9 @@ function pageload(){
         const skill = this.getAttribute("data-name");
 
         if (this.checked) {
-            Skills[skill].rank = Skills[skill].rank + 1
+            Skills[skill].rank = Skills[skill].rank + 1;
         } else {
-            Skills[skill].rank = Skills[skill].rank - 1
+            Skills[skill].rank = Skills[skill].rank - 1;
         }
 
         update();
@@ -93,13 +100,14 @@ function pageload(){
         });
 
         // Store choices
-        SaveData = {};
+        let SaveData = {};
         for (let i of SkillNames) {
             SaveData[i] = [];
             for (let j of SkillUpLevels) {
                 SaveData[i].push($("#S" + j + i).is(":checked"));
             }
         }
+
         SelectedActor.setFlag("pf2e-prof-manager", "prof", SaveData);
 
         ui.notifications.info("PF2E Skill Proficiency Manager | Skill proficiencies applied");
@@ -109,28 +117,12 @@ function pageload(){
 function update(){
     //set rank display
     for (let skill of SkillNames) {
-        switch(Skills[skill].rank) {
-            case 0:
-                $("#S" + skill).html("Untrained");
-                break;
-            case 1:
-                $("#S" + skill).html("Trained");
-                break;
-            case 2:
-                $("#S" + skill).html("Expert");
-                break;
-            case 3:
-                $("#S" + skill).html("Master");
-                break;
-            case 4:
-                $("#S" + skill).html("Legendary");
-                break;
-          }
+        $("#S" + skill).html(game.i18n.localize(`PF2E.ProficiencyLevel${Skills[skill].rank}`));
     }
 
     //disable SkillNames that can't be increased higher than their currently level yet
     for (let skill of SkillNames) {
-        let rank = Skills[skill].rank
+        let rank = Skills[skill].rank;
 
         SkillUpLevels.forEach(skillUpLevel => {
 
@@ -167,11 +159,15 @@ function update(){
     //check for filled increases
     for (let i of SkillUpLevels) {
         if(i == 1){
-            // Don't allow changing of level 1 profs when above level one, this is because we have no way of knowing if they increased their int or not 
-            if($(`.Scenter.S${i}`).find(":checked").length >= Class.trainedSkills.additional + SelectedActor.abilities.int.mod || Level > 1){
+            // Don't allow changing of level 1 profs after getting 2nd skill increase, this is because we have no way of knowing if they increased their int or not 
+            if($(`.Scenter.S${i}`).find(":checked").length >= Class.trainedSkills.additional + SelectedActor.abilities.int.mod || SkillUpLevels.length > 1){
+                $(`.Scenter.S${i}`).find(":not(:checked)").prop("disabled", true);
+            } 
+
+            if(SkillUpLevels.length > 1){
                 $(`.Scenter.S${i}`).find(":not(:checked)").prop("disabled", true);
                 $(`.Scenter.S${i}`).find(":checked").prop("disabled", true);
-            } 
+            }
         } else{
             if($(`.Scenter.S${i}`).find(":checked").length){
                 $(`.Scenter.S${i}`).find(":not(:checked)").prop("disabled", true);
@@ -179,3 +175,7 @@ function update(){
         }
     }
 }
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}  

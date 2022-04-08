@@ -1,7 +1,7 @@
 {
     "name": "pf2e-prof-manager",
     "title": "PF2e Proficiency Manager",
-    "description": "An easy way to level up proficiencies for the Pathfinder 2e system",
+    "description": "An easy way to level up proficiencies for the Pathfinder 2e system, heavy inspiration taken from https://gitlab.com/pearcebasmanm/pf2e-abs-manager",
     "author": "Vasher",
     "url": "https://github.com/Vasher1/pf2e-prof-manager",
     "bugs": "https://github.com/Vasher1/pf2e-prof-manager/issues",
@@ -9,12 +9,13 @@
         "allowBugReporter": true
     },
     "version": "1.0.0",
-    "minimumCoreVersion": "0.8.6",
+    "minimumCoreVersion": "0.9",
     "compatibleCoreVersion": "9",
     "scripts": [],
     "esmodules": ["./index.js"],
     "styles": [],
     "system": ["pf2e"],
-    "manifest": "https://github.com/Vasher1/pf2e-prof-manager/blob/master/module.json",
+    "manifest": "https://raw.githubusercontent.com/Vasher1/pf2e-prof-manager/master/module.json",
+    "download": "https://github.com/Vasher1/pf2e-prof-manager/releases/download/1.0.0/pf2e-prof-manager-1.0.0.rar",
     "minimumSystemVersion": "2.20.0"
 }
