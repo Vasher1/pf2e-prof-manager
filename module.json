@@ -1,10 +1,8 @@
 {
     "name": "pf2e-prof-manager",
-    "title": "PF2e Proficiency Manager",
-    "description": "An easy way to level up proficiencies for the Pathfinder 2e system",
-    "author": "Vasher",
+    "title": "Dice Tray - An Example FVTT Module",
+    "description": "A simple module created as a demo for working in the Foundry Virtual Tabletop framework.",
+    "author": "Atropos",
     "version": "1.0.0",
-    "minimumCoreVersion": "0.8.6",
-    "esmodules": ["./index.js"],
-    "system": ["pf2e"]
-}
+    "minimumCoreVersion": "0.5.0"
+  }
