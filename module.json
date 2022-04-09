@@ -8,7 +8,7 @@
     "flags": {
         "allowBugReporter": true
     },
-    "version": "1.0.0",
+    "version": "1.0.1",
     "minimumCoreVersion": "0.9",
     "compatibleCoreVersion": "9",
     "scripts": [],
@@ -16,6 +16,6 @@
     "styles": [],
     "system": ["pf2e"],
     "manifest": "https://raw.githubusercontent.com/Vasher1/pf2e-prof-manager/master/module.json",
-    "download": "https://github.com/Vasher1/pf2e-prof-manager/releases/download/1.0.0/pf2e-prof-manager-1.0.0.rar",
+    "download": "https://github.com/Vasher1/pf2e-prof-manager/releases/download/1.0.1/pf2e-prof-manager-1.0.1.zip",
     "minimumSystemVersion": "2.20.0"
 }
