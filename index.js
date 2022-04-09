@@ -46,6 +46,11 @@ function pageload(){
     SkillNames.forEach(skillName => {
         var skillNameTranslated = game.i18n.localize(`PF2E.Skill${capitalizeFirstLetter(Skills[skillName].name)}`);
 
+        if(skillNameTranslated == `PF2E.Skill${capitalizeFirstLetter(Skills[skillName].name)}`){
+            //Didn't find translation, probably a lore skill
+            skillNameTranslated = capitalizeFirstLetter(Skills[skillName].name);
+        }
+
         $(`<tr><td>${skillNameTranslated}</td><td class="Scenter" id="S${skillName}"></td></tr>`).insertAfter($("#header"));
     })
 
