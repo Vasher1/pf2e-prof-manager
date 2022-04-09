@@ -27,13 +27,13 @@ Hooks.on("renderActorSheet", (sheet, $html) => {
 let SkillUpLevels, SkillNames, Level, Class, Skills, Flags, SelectedActor
 
 function pageload(){    
+    var LevelTranslation = game.i18n.localize("PF2E.CharacterLevelLabel");
     SelectedActor = globalThis.PROF;
     Skills =  JSON.parse(JSON.stringify(SelectedActor.data.data.skills));
     Class = SelectedActor.class.data.data;
     Level = SelectedActor.data.data.details.level.value;
     SkillNames = Object.getOwnPropertyNames(Skills);
     Flags = SelectedActor.data.flags["pf2e-prof-manager"]?.prof;
-    LevelTranslation = game.i18n.localize("PF2E.CharacterLevelLabel");
     $('#LevelTitle').html(LevelTranslation);
 
     SkillNames = SkillNames.sort(function(a, b){
